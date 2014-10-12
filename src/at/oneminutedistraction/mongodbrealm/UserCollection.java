@@ -14,6 +14,10 @@ import com.mongodb.BasicDBList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static at.oneminutedistraction.mongodbrealm.Constants.*;
+import com.mongodb.MongoException;
+import java.util.Arrays;
+
 /**
  *
  * @author cmlee
@@ -29,14 +33,32 @@ public class UserCollection {
 	}			
 	
 	private BasicDBObject create(String username, String password) {
+		BasicDBObject user = new BasicDBObject();
 		
+		user.append(ATTR_USERNAME, username)
+				.append(ATTR_PASSWORD, passwordMgr.encrypt(password));
+		
+		return (user);
+	}
+	
+	private BasicDBObject create(String username, String password, String... groupList) {
+		BasicDBObject user = create(username, password);
+		
+		BasicDBList groups = new BasicDBList();
+		groups.addAll(Arrays.asList(groupList));
+		user.append(ATTR_GROUPS, groups);
+		
+		return (user);
+	}
+	
+	private BasicDBObject find(String username) {
+		return ((BasicDBObject)users.findOne(new BasicDBObject(ATTR_USERNAME, username)));
 	}
 	
 	public String[] authenticate(final String username, final String password) 
 			throws LoginException {
 				
-		BasicDBObject user = (BasicDBObject)users.findOne(
-				new BasicDBObject(ATTR_USERNAME, username));
+		BasicDBObject user = find(username);
 		if (null == user)
 			throw new LoginException(username + " does not exist");
 		
@@ -55,15 +77,47 @@ public class UserCollection {
 		return (g.toArray(new String[g.size()]));
 	}
 	
-	public boolean insert(String username, String password, String... groups) {
-		return (true);
+	public void insert(String username, String password, String... groupList) 
+			throws MongoDBRealmException{
+		
+		insert(create(username, passwordMgr.encrypt(password), groupList));
+		
 	}
+	public void insert(BasicDBObject insertUser) 
+			throws MongoDBRealmException {
+		
+		String username = insertUser.getString(ATTR_USERNAME);
+		
+		if (null != find(username))
+			throw new MongoDBRealmException("User exists: " + username);
+		
+		try {
+			users.insert(insertUser);
+		} catch (MongoException ex) {
+			throw new MongoDBRealmException("Inserting user " + username, ex);			
+		}		
+		
+	}	
 	
-	public boolean update(String username, String password, String... groups) {
-		return (true);
+	public void update(String username, String password, String... groupList) 
+			throws MongoDBRealmException {
+		
+		update(create(username, passwordMgr.encrypt(password), groupList));
+				
 	}
-	public boolean update(BasicDBObject user) {
-		return (true);
+	public void update(BasicDBObject updateUser) 
+			throws MongoDBRealmException{
+		
+		String username = updateUser.getString(ATTR_USERNAME);
+		BasicDBObject toUpdate = find(username);
+		if (null == toUpdate)
+			throw new MongoDBRealmException("Cannot find user: " + username);
+		
+		try {
+			users.update(new BasicDBObject(ATTR_USERNAME, username), updateUser);
+		} catch (MongoException ex) {
+			throw new MongoDBRealmException("Updating user " + username, ex);
+		}		
 	}
 	
 }
