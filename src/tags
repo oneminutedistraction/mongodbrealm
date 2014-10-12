@@ -1,0 +1,52 @@
+!_TAG_FILE_FORMAT	2	/extended format; --format=1 will not append ;" to lines/
+!_TAG_FILE_SORTED	1	/0=unsorted, 1=sorted, 2=foldcase/
+!_TAG_PROGRAM_AUTHOR	Darren Hiebert	/dhiebert@users.sourceforge.net/
+!_TAG_PROGRAM_NAME	Exuberant Ctags	//
+!_TAG_PROGRAM_URL	http://ctags.sourceforge.net	/official site/
+!_TAG_PROGRAM_VERSION	5.9~svn20110310	//
+ATTR_GROUPS	at/oneminutedistraction/mongodbrealm/Constants.java	/^	public static final String ATTR_GROUPS = "groups";$/;"	f	class:Constants
+ATTR_PASSWORD	at/oneminutedistraction/mongodbrealm/Constants.java	/^	public static final String ATTR_PASSWORD = "password";$/;"	f	class:Constants
+ATTR_USERNAME	at/oneminutedistraction/mongodbrealm/Constants.java	/^	public static final String ATTR_USERNAME = "username";$/;"	f	class:Constants
+Constants	at/oneminutedistraction/mongodbrealm/Constants.java	/^public class Constants {$/;"	c
+MongoDBRealm	at/oneminutedistraction/mongodbrealm/MongoDBRealm.java	/^public class MongoDBRealm extends AppservRealm {	$/;"	c
+MongoDBRealmLoginModule	at/oneminutedistraction/mongodbrealm/MongoDBRealmLoginModule.java	/^public class MongoDBRealmLoginModule extends AppservPasswordLoginModule {$/;"	c
+PREFIX	at/oneminutedistraction/mongodbrealm/Constants.java	/^	public static final String PREFIX = "at.oneminutedistraction.mongodbrealm";$/;"	f	class:Constants
+PROP_COLLECTION_NAME	at/oneminutedistraction/mongodbrealm/Constants.java	/^	public static final String PROP_COLLECTION_NAME = PREFIX + ".collection";			$/;"	f	class:Constants
+PROP_DB_NAME	at/oneminutedistraction/mongodbrealm/Constants.java	/^	public static final String PROP_DB_NAME = PREFIX + ".db";$/;"	f	class:Constants
+PROP_PASSWORD_MANAGER	at/oneminutedistraction/mongodbrealm/Constants.java	/^	public static final String PROP_PASSWORD_MANAGER = PREFIX + ".passwordManager";		$/;"	f	class:Constants
+PROP_SERVER	at/oneminutedistraction/mongodbrealm/Constants.java	/^	public static final String PROP_SERVER = PREFIX + ".server";			$/;"	f	class:Constants
+PasswordManager	at/oneminutedistraction/mongodbrealm/PasswordManager.java	/^public interface PasswordManager {$/;"	i
+SERVICE_NAME	at/oneminutedistraction/mongodbrealm/Constants.java	/^	public static final String SERVICE_NAME = "MongoDBRealm";$/;"	f	class:Constants
+SHA256	at/oneminutedistraction/mongodbrealm/SHA256PasswordManager.java	/^	private static final String SHA256 = "SHA-256";$/;"	f	class:SHA256PasswordManager	file:
+SHA256PasswordManager	at/oneminutedistraction/mongodbrealm/SHA256PasswordManager.java	/^public class SHA256PasswordManager implements PasswordManager {$/;"	c
+UserCollection	at/oneminutedistraction/mongodbrealm/UserCollection.java	/^	public UserCollection(PasswordManager pm, DBCollection c) {$/;"	m	class:UserCollection
+UserCollection	at/oneminutedistraction/mongodbrealm/UserCollection.java	/^public class UserCollection {$/;"	c
+at.oneminutedistraction.mongodbrealm	at/oneminutedistraction/mongodbrealm/Constants.java	/^package at.oneminutedistraction.mongodbrealm;$/;"	p
+at.oneminutedistraction.mongodbrealm	at/oneminutedistraction/mongodbrealm/MongoDBRealm.java	/^package at.oneminutedistraction.mongodbrealm;$/;"	p
+at.oneminutedistraction.mongodbrealm	at/oneminutedistraction/mongodbrealm/MongoDBRealmLoginModule.java	/^package at.oneminutedistraction.mongodbrealm;$/;"	p
+at.oneminutedistraction.mongodbrealm	at/oneminutedistraction/mongodbrealm/PasswordManager.java	/^package at.oneminutedistraction.mongodbrealm;$/;"	p
+at.oneminutedistraction.mongodbrealm	at/oneminutedistraction/mongodbrealm/SHA256PasswordManager.java	/^package at.oneminutedistraction.mongodbrealm;$/;"	p
+at.oneminutedistraction.mongodbrealm	at/oneminutedistraction/mongodbrealm/UserCollection.java	/^package at.oneminutedistraction.mongodbrealm;$/;"	p
+authenticate	at/oneminutedistraction/mongodbrealm/MongoDBRealm.java	/^	public String[] authenticate(final String username, final String password) $/;"	m	class:MongoDBRealm
+authenticate	at/oneminutedistraction/mongodbrealm/UserCollection.java	/^	public String[] authenticate(final String username, final String password) $/;"	m	class:UserCollection
+authenticateUser	at/oneminutedistraction/mongodbrealm/MongoDBRealmLoginModule.java	/^	protected void authenticateUser() throws LoginException {$/;"	m	class:MongoDBRealmLoginModule
+collectionName	at/oneminutedistraction/mongodbrealm/MongoDBRealm.java	/^	private String collectionName = null;$/;"	f	class:MongoDBRealm	file:
+encrypt	at/oneminutedistraction/mongodbrealm/PasswordManager.java	/^	public String encrypt(String password);$/;"	m	interface:PasswordManager
+encrypt	at/oneminutedistraction/mongodbrealm/SHA256PasswordManager.java	/^	public String encrypt(String password) {$/;"	m	class:SHA256PasswordManager
+getAuthType	at/oneminutedistraction/mongodbrealm/MongoDBRealm.java	/^	public String getAuthType() {$/;"	m	class:MongoDBRealm
+getGroupNames	at/oneminutedistraction/mongodbrealm/MongoDBRealm.java	/^	public Enumeration getGroupNames(String username) $/;"	m	class:MongoDBRealm
+getGroupNamesAsArray	at/oneminutedistraction/mongodbrealm/MongoDBRealm.java	/^	public String[] getGroupNamesAsArray(String username) {$/;"	m	class:MongoDBRealm
+init	at/oneminutedistraction/mongodbrealm/MongoDBRealm.java	/^	protected void init(Properties props) $/;"	m	class:MongoDBRealm
+init	at/oneminutedistraction/mongodbrealm/PasswordManager.java	/^	public void init(Properties prop);$/;"	m	interface:PasswordManager
+init	at/oneminutedistraction/mongodbrealm/SHA256PasswordManager.java	/^	public void init(Properties prop) { }$/;"	m	class:SHA256PasswordManager
+insert	at/oneminutedistraction/mongodbrealm/UserCollection.java	/^	public boolean insert(String username, String password, String... groups) {$/;"	m	class:UserCollection
+isValid	at/oneminutedistraction/mongodbrealm/PasswordManager.java	/^	public boolean isValid(String encrypted, String password);$/;"	m	interface:PasswordManager
+isValid	at/oneminutedistraction/mongodbrealm/SHA256PasswordManager.java	/^	public boolean isValid(String encrypted, String password) {$/;"	m	class:SHA256PasswordManager
+logger	at/oneminutedistraction/mongodbrealm/MongoDBRealm.java	/^	private static final Logger logger = Logger.getLogger(MongoDBRealm.class.getName());	$/;"	f	class:MongoDBRealm	file:
+logger	at/oneminutedistraction/mongodbrealm/MongoDBRealmLoginModule.java	/^	private static final Logger logger = Logger.getLogger(MongoDBRealmLoginModule.class.getName());$/;"	f	class:MongoDBRealmLoginModule	file:
+logger	at/oneminutedistraction/mongodbrealm/SHA256PasswordManager.java	/^	private static final Logger logger = Logger.getLogger(SHA256PasswordManager.class.getName());$/;"	f	class:SHA256PasswordManager	file:
+main	at/oneminutedistraction/mongodbrealm/SHA256PasswordManager.java	/^	public static void main(String... args) throws Throwable {$/;"	m	class:SHA256PasswordManager
+mongoClient	at/oneminutedistraction/mongodbrealm/MongoDBRealm.java	/^	private MongoClient mongoClient = null;	$/;"	f	class:MongoDBRealm	file:
+passwordMgr	at/oneminutedistraction/mongodbrealm/MongoDBRealm.java	/^	private PasswordManager passwordMgr = null;$/;"	f	class:MongoDBRealm	file:
+passwordMgr	at/oneminutedistraction/mongodbrealm/UserCollection.java	/^	private final PasswordManager passwordMgr;$/;"	f	class:UserCollection	file:
+users	at/oneminutedistraction/mongodbrealm/UserCollection.java	/^	private final DBCollection users;$/;"	f	class:UserCollection	file:
