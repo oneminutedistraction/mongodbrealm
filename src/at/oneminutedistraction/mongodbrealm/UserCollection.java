@@ -9,7 +9,6 @@ import com.mongodb.BasicDBObject;
 import com.mongodb.DBCollection;
 import javax.security.auth.login.LoginException;
 
-import static at.oneminutedistraction.mongodbrealm.Constants.*;
 import com.mongodb.BasicDBList;
 import java.util.List;
 import java.util.stream.Collectors;
