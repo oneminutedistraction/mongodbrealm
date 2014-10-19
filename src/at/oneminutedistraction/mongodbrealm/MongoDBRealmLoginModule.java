@@ -27,6 +27,9 @@ public class MongoDBRealmLoginModule extends AppservPasswordLoginModule {
 				, new Object[]{_username, _currentRealm.getClass().getName()});
 		
 		MongoDBRealm mongoRealm = null;
+
+		if ((null == _username) || (_username.trim().length() <= 0))
+			throw new LoginException("Missing username");
 						
 		if (!(_currentRealm instanceof MongoDBRealm)) {
 			String error = MessageFormat.format("{0} is not MongoDBRealm. Check login.conf"
@@ -36,10 +39,15 @@ public class MongoDBRealmLoginModule extends AppservPasswordLoginModule {
 		}
 		
 		mongoRealm = (MongoDBRealm)_currentRealm;
-		
+		String[] groups = null;
+		try {
+			//TODO: other charset support. Currently supports utf-8 only
+			groups = mongoRealm.authenticate(_username, new String(getPasswordChar()));
+		} catch (LoginException ex) {
+			logger.log(Level.WARNING, "Incorrect login: {0}", _username);
+			throw ex;
+		}
 			
-		//Hard code this
-		commitUserAuthentication(new String[]{ "mongo" });
+		commitUserAuthentication(groups);
 	}
-	
 }

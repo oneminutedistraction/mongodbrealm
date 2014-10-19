@@ -5,6 +5,8 @@
  */
 package at.oneminutedistraction.mongodbrealm;
 
+import com.mongodb.DB;
+import com.mongodb.DBCollection;
 import com.mongodb.MongoClient;
 import com.mongodb.ServerAddress;
 import com.sun.appserv.security.AppservRealm;
@@ -36,6 +38,7 @@ public class MongoDBRealm extends AppservRealm {
 	private MongoClient mongoClient = null;	
 	private String collectionName = null;
 	private PasswordManager passwordMgr = null;
+	private String dbName = null;
 
 	@Override
 	protected void init(Properties props) 
@@ -49,6 +52,9 @@ public class MongoDBRealm extends AppservRealm {
 			logger.log(Level.INFO, "property: {0}: {1}",
 					new Object[]{ key, props.getProperty((String)key)});
 		});	
+
+		//DB name
+		dbName = props.getProperty(Constants.PROP_DB_NAME, "mongousers");
 		
 		//Collection name
 		collectionName = props.getProperty(Constants.PROP_COLLECTION_NAME, "users");
@@ -82,6 +88,8 @@ public class MongoDBRealm extends AppservRealm {
 			}			
 			serverList.add(serverAddress);
 		}
+
+		//TODO: MongoClient credentials
 				
 		if (serverList.size() > 0) {
 			logger.log(Level.INFO, "MongoDB replicas: {0}", serverList);
@@ -110,10 +118,15 @@ public class MongoDBRealm extends AppservRealm {
 			throw new BadRealmException(msg, ex);
 		}
 	}		
-	
+
 	public String[] authenticate(final String username, final String password) 
 			throws LoginException {
-		return (null);
+
+		DB db = mongoClient.getDB(dbName);
+		DBCollection userCollection = db.getCollection(collectionName);
+		UserCollection collection = new UserCollection(passwordMgr,  userCollection);
+
+		return (collection.authenticate(username, password));
 	}
 
 	@Override

@@ -19,8 +19,11 @@ public class Constants {
 	public static final String PROP_COLLECTION_NAME = PREFIX + ".collection";			
 	public static final String PROP_SERVER = PREFIX + ".server";			
 	public static final String PROP_PASSWORD_MANAGER = PREFIX + ".passwordManager";		
-	public static final String PROP_USERNAME = ".username";
-	public static final String PROP_PASSWORD = ".password";
+	public static final String PROP_USERNAME = PREFIX + ".username";
+	public static final String PROP_PASSWORD = PREFIX + ".password";
+	
+	public static final String SHA256  = "SHA-256";
+	public static final String SHA512  = "SHA-512";
 	
 	public static final String ATTR_USERNAME = "username";
 	public static final String ATTR_PASSWORD = "password";

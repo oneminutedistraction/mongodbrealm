@@ -50,7 +50,7 @@ public class UserCollection {
 		return (user);
 	}
 	
-	private BasicDBObject find(String username) {
+	public BasicDBObject find(String username) {
 		return ((BasicDBObject)users.findOne(new BasicDBObject(ATTR_USERNAME, username)));
 	}
 	
@@ -86,7 +86,6 @@ public class UserCollection {
 			throws MongoDBRealmException {
 		
 		String username = insertUser.getString(ATTR_USERNAME);
-		
 		if (null != find(username))
 			throw new MongoDBRealmException("User exists: " + username);
 		
@@ -108,15 +107,37 @@ public class UserCollection {
 			throws MongoDBRealmException{
 		
 		String username = updateUser.getString(ATTR_USERNAME);
-		BasicDBObject toUpdate = find(username);
-		if (null == toUpdate)
-			throw new MongoDBRealmException("Cannot find user: " + username);
+		verify(updateUser, "Cannot find user: " + username);
 		
 		try {
 			users.update(new BasicDBObject(ATTR_USERNAME, username), updateUser);
 		} catch (MongoException ex) {
 			throw new MongoDBRealmException("Updating user " + username, ex);
 		}		
+	}
+
+	public void remove(String username)
+			throws MongoDBRealmException {
+		remove(new BasicDBObject(ATTR_USERNAME, username));
+	}
+	public void remove(BasicDBObject deleteUser) 
+			throws MongoDBRealmException {
+
+		String username = deleteUser.getString(ATTR_USERNAME);
+		verify(deleteUser, "Cannot find user: " + username);
+
+		try {
+			users.remove(deleteUser);
+		} catch (MongoException ex) {
+			throw new MongoDBRealmException("Deleting user " + username, ex);
+		}
+	}
+
+	private void verify(final BasicDBObject obj, final String exceptionMsg) 
+			throws MongoDBRealmException {
+		final String username = obj.getString(ATTR_USERNAME);
+		if (null == find(username))
+			throw new MongoDBRealmException(exceptionMsg);
 	}
 	
 }

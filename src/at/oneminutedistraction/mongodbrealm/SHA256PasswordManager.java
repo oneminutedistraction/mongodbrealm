@@ -21,15 +21,27 @@ public class SHA256PasswordManager implements PasswordManager {
 	private static final Logger logger = Logger.getLogger(SHA256PasswordManager.class.getName());
 	
 	private static final String SHA256 = "SHA-256";
+	private static final String PROP_SHA_ALGO  = Constants.PROP_PASSWORD_MANAGER + ".algorithm";
+
+	private String digestAlgo = null;
 
 	@Override
-	public void init(Properties prop) { }
+	public void init(Properties prop) { 
+		digestAlgo = prop.getProperty(PROP_SHA_ALGO, SHA256);
+		try {
+			MessageDigest.getInstance(digestAlgo);
+		} catch (NoSuchAlgorithmException ex) {
+			logger.log(Level.SEVERE, "No algorithm found: {0}. Falling back to SHA-256", digestAlgo);
+			digestAlgo = SHA256;
+		}
+	}
 
 	@Override
 	public String encrypt(String password) {
 		//From http://stackoverflow.com/questions/5531455/how-to-encode-some-string-with-sha256-in-java
 		try {
-			MessageDigest md = MessageDigest.getInstance(SHA256);
+			MessageDigest md = MessageDigest.getInstance(digestAlgo);
+			md.reset();
 			byte[] hash = md.digest(password.getBytes("UTF-8"));
 			StringBuilder buffer = new StringBuilder();
 			for (byte b: hash) {
