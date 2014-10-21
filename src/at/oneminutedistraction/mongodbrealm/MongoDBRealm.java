@@ -5,6 +5,7 @@
  */
 package at.oneminutedistraction.mongodbrealm;
 
+import at.oneminutedistraction.mongodbrealm.spi.PasswordManager;
 import com.mongodb.DB;
 import com.mongodb.DBCollection;
 import com.mongodb.MongoClient;
@@ -23,17 +24,20 @@ import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.security.auth.login.LoginException;
-import org.jvnet.hk2.annotations.Service;
+
+import static at.oneminutedistraction.mongodbrealm.Constants.*;
+import java.util.Arrays;
+import java.util.Collections;
 
 /**
  *
  * @author cmlee
  */
 
-@Service(name = Constants.SERVICE_NAME)
+//@Service(name = Constants.SERVICE_NAME)
 public class MongoDBRealm extends AppservRealm {	
 	
-	private static final Logger logger = Logger.getLogger(MongoDBRealm.class.getName());	
+	private static final Logger logger = Logger.getLogger(MongoDBRealm.class.getName());
 	
 	private MongoClient mongoClient = null;	
 	private String collectionName = null;
@@ -41,7 +45,7 @@ public class MongoDBRealm extends AppservRealm {
 	private String dbName = null;
 
 	@Override
-	protected void init(Properties props) 
+	public void init(Properties props) 
 			throws BadRealmException, NoSuchRealmException {
 		
 		super.init(props);
@@ -54,95 +58,86 @@ public class MongoDBRealm extends AppservRealm {
 		});	
 
 		//DB name
-		dbName = props.getProperty(Constants.PROP_DB_NAME, "mongousers");
+		dbName = props.getProperty(PROP_DB_NAME, DEFAULT_DB_NAME);
 		
 		//Collection name
-		collectionName = props.getProperty(Constants.PROP_COLLECTION_NAME, "users");
+		collectionName = props.getProperty(PROP_COLLECTION_NAME, DEFAULT_COLLECTION_NAME);
 		logger.log(Level.INFO, "Collection name: {0}", collectionName);
 		
-		//Server list
-		String servers = props.getProperty(Constants.PROP_SERVER, "localhost");
-		List<ServerAddress> serverList = new LinkedList<>();
-		for (String s: servers.trim().replaceAll(" +", " ").split(" ")) {			
-			String[] hostPort = s.split(":");
-			ServerAddress serverAddress = null;		
-			try {
-				switch (hostPort.length) {					
-					case 1:					
-						serverAddress = new ServerAddress(hostPort[0]);
-						break;
-					case 2:
-						serverAddress = new ServerAddress(hostPort[0]
-								, Integer.parseInt(hostPort[1]));
-						break;
-					default:
-						continue;
-					
-				}
-			} catch (UnknownHostException ex) {
-				logger.log(Level.WARNING, "Ignoring unknown host: {0}", hostPort[0]);
-				continue;
-			} catch (NumberFormatException ex) {
-				logger.log(Level.WARNING, "Ignoring port number error: {0}", s);
-				continue;
-			}			
-			serverList.add(serverAddress);
+		//Create MongoClientFactory
+		String clientClass = props.getProperty(PROP_MONGO_CLIENT
+				, DefaultMongoClient.class.getName());
+		logger.log(Level.INFO, "MongoClient class: {0}", clientClass);
+		Object obj = null;
+		try {
+			obj = Class.forName(clientClass).newInstance();
+			if (!(obj instanceof at.oneminutedistraction.mongodbrealm.spi.MongoClientFactory))
+				throw new BadRealmException(clientClass + " is not an instance of MongoClient interface");
+		} catch (ClassNotFoundException | InstantiationException 
+				| IllegalAccessException ex) {
+			String msg = MessageFormat.format(
+					"Cannot instantiate MongoClient class: {0}", clientClass);
+			logger.log(Level.SEVERE, msg);
+			throw new BadRealmException(msg, ex);
 		}
-
-		//TODO: MongoClient credentials
-				
-		if (serverList.size() > 0) {
-			logger.log(Level.INFO, "MongoDB replicas: {0}", serverList);
-			mongoClient = new MongoClient(serverList);
-		} else {
-			logger.log(Level.INFO, "MongoDB instance at localhost");
-			try {
-				mongoClient = new MongoClient("localhost");
-			} catch (UnknownHostException ex) { 
-				//Seriously?
-			}
+		at.oneminutedistraction.mongodbrealm.spi.MongoClientFactory mc = 
+				(at.oneminutedistraction.mongodbrealm.spi.MongoClientFactory)obj;
+		mc.init(props);
+		try {
+			mongoClient = mc.create();
+		} catch (Exception ex) {
+			String msg = MessageFormat.format("Creating MongoClient with {0}", clientClass);
+			logger.log(Level.SEVERE, msg, ex);
+			throw new BadRealmException(msg, ex);
 		}
 		
-		String passwd = props.getProperty(Constants.PROP_PASSWORD_MANAGER
+		//Create PasswordManager
+		String passwd = props.getProperty(PROP_PASSWORD_MANAGER
 				, SHA256PasswordManager.class.getName());
 		logger.log(Level.INFO, "PasswordManager class: {0}", passwd);
 		try {
-			Object obj = Class.forName(passwd);
+			obj = Class.forName(passwd).newInstance();				
 			if (!(obj instanceof PasswordManager))
 				throw new BadRealmException(passwd + " is not an instance of PasswordManager");
 			passwordMgr = (PasswordManager)obj;
-		} catch (ClassNotFoundException ex) {
+		} catch (ClassNotFoundException | InstantiationException 
+				| IllegalAccessException ex) {
 			String msg = MessageFormat.format(
 					"Cannot instantiate PasswordManager class: {0}", passwd);
 			logger.log(Level.SEVERE, msg);
 			throw new BadRealmException(msg, ex);
 		}
+		passwordMgr.init(props);
 	}		
 
 	public String[] authenticate(final String username, final String password) 
 			throws LoginException {
-
-		DB db = mongoClient.getDB(dbName);
-		DBCollection userCollection = db.getCollection(collectionName);
-		UserCollection collection = new UserCollection(passwordMgr,  userCollection);
+		
+		UserCollection collection = createUserCollection();
 
 		return (collection.authenticate(username, password));
-	}
+	}		
 
 	@Override
 	public String getAuthType() {
 		return ("MongoDBRealm");
 	}
-	
-	public String[] getGroupNamesAsArray(String username) {
-		logger.log(Level.INFO, "Groups for {0}", username);
-		return (null);
-	}
 
 	@Override
 	public Enumeration getGroupNames(String username) 
 			throws InvalidOperationException, NoSuchUserException {
-		return (null);
+		
+		UserCollection collection = createUserCollection();
+		String[] groups = collection.groups(username);
+		if (null == groups)
+			throw new NoSuchUserException(username + " does not exist");				
+		return (Collections.enumeration(Arrays.asList(groups)));
+	}
+	
+	private UserCollection createUserCollection() {
+		DB db = mongoClient.getDB(dbName);
+		DBCollection userCollection = db.getCollection(collectionName);
+		return (new UserCollection(passwordMgr, userCollection));
 	}
 	
 }

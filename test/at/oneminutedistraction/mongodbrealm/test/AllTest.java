@@ -5,6 +5,7 @@
  */
 package at.oneminutedistraction.mongodbrealm.test;
 
+import org.junit.BeforeClass;
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 
@@ -13,7 +14,7 @@ import org.junit.runners.Suite;
  * @author cmlee
  */
 @RunWith(Suite.class)
-@Suite.SuiteClasses({TestMongoDB.class})
+@Suite.SuiteClasses({UserCollectionTest.class, RealmTest.class})
 public class AllTest {
 	
 }

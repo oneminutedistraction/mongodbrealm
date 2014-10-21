@@ -5,6 +5,7 @@
  */
 package at.oneminutedistraction.mongodbrealm;
 
+import at.oneminutedistraction.mongodbrealm.spi.PasswordManager;
 import com.mongodb.BasicDBObject;
 import com.mongodb.DBCollection;
 import javax.security.auth.login.LoginException;
@@ -16,6 +17,7 @@ import java.util.stream.Collectors;
 import static at.oneminutedistraction.mongodbrealm.Constants.*;
 import com.mongodb.MongoException;
 import java.util.Arrays;
+import java.util.Optional;
 
 /**
  *
@@ -59,16 +61,36 @@ public class UserCollection {
 				
 		BasicDBObject user = find(username);
 		if (null == user)
-			throw new LoginException(username + " does not exist");
+			throw new LoginException(username + " does not exist");				
 		
 		if (!(user.containsField(ATTR_PASSWORD) && 
-				passwordMgr.isValid(user.getString(ATTR_PASSWORD), password)))
+				passwordMgr.isValid(user.getString(ATTR_PASSWORD)
+						, password)))
 			throw new LoginException("Invalid password");
+		
+		return (groups(user));
+		
+//		BasicDBList groups = (BasicDBList)user.get(ATTR_GROUPS);
+//		if (null == groups)
+//			return (new String[]{});
+//
+//		
+//		List<String> g = groups.stream()
+//				.map(e -> { return (e.toString()); })
+//				.collect(Collectors.toList());
+//		return (g.toArray(new String[g.size()]));
+	}
+	
+	public String[] groups(String username) {
+		return (groups(find(username)));
+	}
+	public String[] groups(BasicDBObject user) {
+		if (null == user)
+			return (null);
 		
 		BasicDBList groups = (BasicDBList)user.get(ATTR_GROUPS);
 		if (null == groups)
 			return (new String[]{});
-
 		
 		List<String> g = groups.stream()
 				.map(e -> { return (e.toString()); })
@@ -79,7 +101,7 @@ public class UserCollection {
 	public void insert(String username, String password, String... groupList) 
 			throws MongoDBRealmException{
 		
-		insert(create(username, passwordMgr.encrypt(password), groupList));
+		insert(create(username, password, groupList));
 		
 	}
 	public void insert(BasicDBObject insertUser) 

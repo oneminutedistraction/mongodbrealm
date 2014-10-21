@@ -1,5 +1,8 @@
 *.class
 
+# ctag file
+tags
+
 # Mobile Tools for Java (J2ME)
 .mtj.tmp/
 
