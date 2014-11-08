@@ -20,14 +20,16 @@ import java.util.logging.Logger;
  *
  * @author cmlee
  */
-public class DefaultMongoClient implements MongoClientFactory {
+public class DefaultMongoClientFactory implements MongoClientFactory {
 	
-	private static final Logger logger = Logger.getLogger(DefaultMongoClient.class.getName());
+	private static final Logger logger = Logger.getLogger(DefaultMongoClientFactory.class.getName());
 	
 	private Properties props;
 
 	@Override
 	public void init(Properties props) {
+		if (null == props)
+			props = new Properties();
 		this.props = props;
 	}
 

@@ -66,8 +66,8 @@ public class MongoDBRealm extends AppservRealm {
 		
 		//Create MongoClientFactory
 		String clientClass = props.getProperty(PROP_MONGO_CLIENT
-				, DefaultMongoClient.class.getName());
-		logger.log(Level.INFO, "MongoClient class: {0}", clientClass);
+				, DefaultMongoClientFactory.class.getName());
+		logger.log(Level.INFO, "MongoClientFactory class: {0}", clientClass);
 		Object obj = null;
 		try {
 			obj = Class.forName(clientClass).newInstance();

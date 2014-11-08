@@ -28,6 +28,9 @@ public class SHA256PasswordManager implements PasswordManager {
 
 	@Override
 	public void init(Properties prop) { 
+		if (null == prop)
+			prop = new Properties();
+		
 		digestAlgo = prop.getProperty(PROP_SHA_ALGO, SHA256);
 		try {
 			MessageDigest.getInstance(digestAlgo);
