@@ -17,7 +17,8 @@ import javax.security.auth.login.LoginException;
  */
 public class MongoDBRealmLoginModule extends AppservPasswordLoginModule {
 	
-	private static final Logger logger = Logger.getLogger(MongoDBRealmLoginModule.class.getName());
+	private static final Logger logger = Logger.getLogger(
+			MongoDBRealmLoginModule.class.getName());
 		
 
 	@Override
@@ -26,7 +27,7 @@ public class MongoDBRealmLoginModule extends AppservPasswordLoginModule {
 		logger.log(Level.INFO, "Authenticating {0} on {1}"
 				, new Object[]{_username, _currentRealm.getClass().getName()});
 		
-		MongoDBRealm mongoRealm = null;
+		MongoDBRealm mongoRealm = null;				
 
 		if ((null == _username) || (_username.trim().length() <= 0))
 			throw new LoginException("Missing username");

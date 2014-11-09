@@ -30,4 +30,5 @@ public class Constants {
 	
 	public static final String DEFAULT_DB_NAME = "mongorealm";
 	public static final String DEFAULT_COLLECTION_NAME = "users";
+	public static final String DEFAULT_JAAS_CONTEXT = "mongodbRealm";
 }

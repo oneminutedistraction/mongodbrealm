@@ -9,17 +9,13 @@ import at.oneminutedistraction.mongodbrealm.spi.PasswordManager;
 import com.mongodb.DB;
 import com.mongodb.DBCollection;
 import com.mongodb.MongoClient;
-import com.mongodb.ServerAddress;
 import com.sun.appserv.security.AppservRealm;
 import com.sun.enterprise.security.auth.realm.BadRealmException;
 import com.sun.enterprise.security.auth.realm.InvalidOperationException;
 import com.sun.enterprise.security.auth.realm.NoSuchRealmException;
 import com.sun.enterprise.security.auth.realm.NoSuchUserException;
-import java.net.UnknownHostException;
 import java.text.MessageFormat;
 import java.util.Enumeration;
-import java.util.LinkedList;
-import java.util.List;
 import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -34,7 +30,6 @@ import java.util.Collections;
  * @author cmlee
  */
 
-//@Service(name = Constants.SERVICE_NAME)
 public class MongoDBRealm extends AppservRealm {	
 	
 	private static final Logger logger = Logger.getLogger(MongoDBRealm.class.getName());
@@ -42,7 +37,7 @@ public class MongoDBRealm extends AppservRealm {
 	private MongoClient mongoClient = null;	
 	private String collectionName = null;
 	private PasswordManager passwordMgr = null;
-	private String dbName = null;
+	private String dbName = null;	
 
 	@Override
 	public void init(Properties props) 
@@ -56,6 +51,11 @@ public class MongoDBRealm extends AppservRealm {
 			logger.log(Level.INFO, "property: {0}: {1}",
 					new Object[]{ key, props.getProperty((String)key)});
 		});	
+		
+		//jaas-context
+		String jaasContext = props.getProperty(JAAS_CONTEXT_PARAM, DEFAULT_JAAS_CONTEXT);
+		super.setProperty(JAAS_CONTEXT_PARAM, jaasContext);
+		logger.log(Level.INFO, "jaas-context: {0}", jaasContext);
 
 		//DB name
 		dbName = props.getProperty(PROP_DB_NAME, DEFAULT_DB_NAME);
