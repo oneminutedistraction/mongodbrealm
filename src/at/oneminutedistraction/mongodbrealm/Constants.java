@@ -11,15 +11,13 @@ package at.oneminutedistraction.mongodbrealm;
  */
 public class Constants {
 	
-	public static final String SERVICE_NAME = "MongoDBRealm";
-	
-	public static final String PREFIX = "mongorealm";
+	public static final String PREFIX = "mongodbRealm";
 	
 	public static final String PROP_DB_NAME = PREFIX + ".db";
 	public static final String PROP_COLLECTION_NAME = PREFIX + ".collection";			
 	public static final String PROP_SERVER = PREFIX + ".server";			
 	public static final String PROP_PASSWORD_MANAGER = PREFIX + ".passwordManager";		
-	public static final String PROP_MONGO_CLIENT = PREFIX + ".mongoClient";
+	public static final String PROP_MONGO_CLIENT = PREFIX + ".clientFactory";
 	
 	public static final String SHA256  = "SHA-256";
 	public static final String SHA512  = "SHA-512";
@@ -28,7 +26,7 @@ public class Constants {
 	public static final String ATTR_PASSWORD = "password";
 	public static final String ATTR_GROUPS = "groups";
 	
-	public static final String DEFAULT_DB_NAME = "mongorealm";
+	public static final String DEFAULT_DB_NAME = "mongodbRealm";
 	public static final String DEFAULT_COLLECTION_NAME = "users";
 	public static final String DEFAULT_JAAS_CONTEXT = "mongodbRealm";
 }
