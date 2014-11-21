@@ -5,6 +5,7 @@
  */
 package at.oneminutedistraction.mongodbrealm;
 
+import at.oneminutedistraction.mongodbrealm.Constants;
 import at.oneminutedistraction.mongodbrealm.spi.PasswordManager;
 import java.io.UnsupportedEncodingException;
 import java.security.MessageDigest;
@@ -21,9 +22,6 @@ public class SHA256PasswordManager implements PasswordManager {
 	
 	private static final Logger logger = Logger.getLogger(SHA256PasswordManager.class.getName());
 	
-	private static final String SHA256 = "SHA-256";
-	private static final String PROP_SHA_ALGO  = Constants.PROP_PASSWORD_MANAGER + ".algorithm";
-
 	private String digestAlgo = null;
 
 	@Override
@@ -31,12 +29,12 @@ public class SHA256PasswordManager implements PasswordManager {
 		if (null == prop)
 			prop = new Properties();
 		
-		digestAlgo = prop.getProperty(PROP_SHA_ALGO, SHA256);
+		digestAlgo = prop.getProperty(Constants.PROP_SHA_ALGO, Constants.SHA256);
 		try {
 			MessageDigest.getInstance(digestAlgo);
 		} catch (NoSuchAlgorithmException ex) {
 			logger.log(Level.SEVERE, "No algorithm found: {0}. Falling back to SHA-256", digestAlgo);
-			digestAlgo = SHA256;
+			digestAlgo = Constants.SHA256;
 		}
 	}
 

@@ -18,6 +18,7 @@ public class Constants {
 	public static final String PROP_SERVER = PREFIX + ".server";			
 	public static final String PROP_PASSWORD_MANAGER = PREFIX + ".passwordManager";		
 	public static final String PROP_MONGO_CLIENT = PREFIX + ".clientFactory";
+	public static final String PROP_SHA_ALGO  = PREFIX + ".algorithm";
 	
 	public static final String SHA256  = "SHA-256";
 	public static final String SHA512  = "SHA-512";
