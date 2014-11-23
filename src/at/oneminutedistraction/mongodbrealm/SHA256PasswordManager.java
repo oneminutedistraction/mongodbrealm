@@ -5,7 +5,6 @@
  */
 package at.oneminutedistraction.mongodbrealm;
 
-import at.oneminutedistraction.mongodbrealm.Constants;
 import at.oneminutedistraction.mongodbrealm.spi.PasswordManager;
 import java.io.UnsupportedEncodingException;
 import java.security.MessageDigest;
